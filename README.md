@@ -8,7 +8,7 @@ JUnit rule which provides an embedded ZooKeeper server. The rule has also helper
  public ZooKeeperRule zkRule = new ZooKeeperRule();
  
  @Test
- public void test1() throws Exception {
+ public void test() throws Exception {
      try (CuratorFramework client = zkRule.newClient()) {  // It is also possible to create a client on a specific namespace
         client.create().forPath("/path", "data".toBytes());
         Assert.assertArrayEquals("data".toBytes(), client.getData().forPath("/path"));
