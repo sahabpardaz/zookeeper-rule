@@ -30,10 +30,26 @@ public class ZooKeeperRule extends ExternalResource {
     private String localIp;
 
     public ZooKeeperRule() {
-        this(constructZkAddress());
+        this(newLocalAddress());
     }
 
-    private static String constructZkAddress() {
+    /**
+     * Creates a rule to setup an embedded ZooKeeper.
+     *
+     * @param address the local address on which the embedded ZooKeeper should be setup. It should
+     * be in format of "IP:PORT" and the IP should be one of the IPs of the local system.
+     */
+    public ZooKeeperRule(String address) {
+        String[] splittedAddress = address.split(":");
+        if (splittedAddress.length != 2) {
+            throw new IllegalArgumentException("Address should be in the format of IP:PORT");
+        }
+
+        this.localIp = splittedAddress[0];
+        this.port = Integer.parseInt(splittedAddress[1]);
+    }
+
+    private static String newLocalAddress() {
 
         // Why we are going to use local IP and not just localhost or 127.0.0.1 constants?
         // Because we have encountered a problem when configured an KafkaServerStartable
@@ -41,24 +57,14 @@ public class ZooKeeperRule extends ExternalResource {
         // But using local IP, solved the problem. See this:
         // https://www.ibm.com/support/knowledgecenter/SSPT3X_4.1.0/
         // com.ibm.swg.im.infosphere.biginsights.trb.doc/doc/trb_kafka_producer_localhost.html
-        String localIp = null;
+        String localIp;
         try {
             localIp = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            throw new AssertionError(e);
         }
 
         return localIp + ":" + anOpenPort();
-    }
-
-    public ZooKeeperRule(String address) {
-        String[] splittedAddress = address.split(":");
-        if (splittedAddress.length != 2) {
-            throw new IllegalArgumentException("Invalid ZooKeeper address");
-        }
-
-        this.localIp = splittedAddress[0];
-        this.port = Integer.parseInt(splittedAddress[1]);
     }
 
     @Override

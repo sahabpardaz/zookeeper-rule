@@ -11,11 +11,10 @@ import org.junit.Test;
 
 public class ZooKeeperRuleTest {
 
-    private static final String LOCAL_IP = "127.0.1.1";
-    private static final int PORT = ZooKeeperRule.anOpenPort();
+    private static final String LOCAL_ADDRESS = "127.0.0.1:" +  ZooKeeperRule.anOpenPort();
 
     @ClassRule
-    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_IP + ":" + PORT);
+    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_ADDRESS);
 
     @Rule
     public ZooKeeperRule zkRule = new ZooKeeperRule();
@@ -70,7 +69,7 @@ public class ZooKeeperRuleTest {
     public void testExplicitPort() throws Exception {
         checkZkIsClean();
 
-        Assert.assertEquals(zkClassRule.getPort(), PORT);
+        Assert.assertEquals(zkClassRule.getPort(), Integer.parseInt(LOCAL_ADDRESS.split(":")[1]));
 
         makeZkDirty();
     }
