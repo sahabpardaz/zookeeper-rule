@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class ZooKeeperRuleTest {
 
-    private static final String LOCAL_ADDRESS = "127.0.0.1:" +  ZooKeeperRule.anOpenPort();
+    private static final String LOCAL_ADDRESS = "127.0.0.1:" + ZooKeeperRule.anOpenPort();
 
     @ClassRule
     public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_ADDRESS);
@@ -66,10 +66,10 @@ public class ZooKeeperRuleTest {
     }
 
     @Test
-    public void testExplicitPort() throws Exception {
+    public void testExplicitAddress() throws Exception {
         checkZkIsClean();
 
-        Assert.assertEquals(zkClassRule.getPort(), Integer.parseInt(LOCAL_ADDRESS.split(":")[1]));
+        Assert.assertEquals(LOCAL_ADDRESS, zkClassRule.getAddress());
 
         makeZkDirty();
     }
