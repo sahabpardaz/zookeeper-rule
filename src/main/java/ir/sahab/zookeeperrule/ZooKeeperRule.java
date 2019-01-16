@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,20 +30,26 @@ public class ZooKeeperRule extends ExternalResource {
     private String localIp;
 
     public ZooKeeperRule() {
-        this(anOpenPort());
+        this(newLocalAddress());
     }
 
-    public ZooKeeperRule(int port) {
-        if (port < 0) {
-            throw new IllegalArgumentException("Port number must be positive");
+    /**
+     * Creates a rule to setup an embedded ZooKeeper.
+     *
+     * @param address the local address on which the embedded ZooKeeper should be setup. It should
+     * be in format of "IP:PORT" and the IP should be one of the IPs of the local system.
+     */
+    public ZooKeeperRule(String address) {
+        String[] splittedAddress = address.split(":");
+        if (splittedAddress.length != 2) {
+            throw new IllegalArgumentException("Address should be in the format of IP:PORT");
         }
-        this.port = port;
+
+        this.localIp = splittedAddress[0];
+        this.port = Integer.parseInt(splittedAddress[1]);
     }
 
-    @Override
-    protected void before() throws IOException, InterruptedException {
-        snapshotDir = Files.createTempDirectory("zk-snapshot").toFile();
-        logDir = Files.createTempDirectory("zk-logs").toFile();
+    private static String newLocalAddress() {
 
         // Why we are going to use local IP and not just localhost or 127.0.0.1 constants?
         // Because we have encountered a problem when configured an KafkaServerStartable
@@ -50,7 +57,20 @@ public class ZooKeeperRule extends ExternalResource {
         // But using local IP, solved the problem. See this:
         // https://www.ibm.com/support/knowledgecenter/SSPT3X_4.1.0/
         // com.ibm.swg.im.infosphere.biginsights.trb.doc/doc/trb_kafka_producer_localhost.html
-        localIp = InetAddress.getLocalHost().getHostAddress();
+        String localIp;
+        try {
+            localIp = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new AssertionError(e);
+        }
+
+        return localIp + ":" + anOpenPort();
+    }
+
+    @Override
+    protected void before() throws IOException, InterruptedException {
+        snapshotDir = Files.createTempDirectory("zk-snapshot").toFile();
+        logDir = Files.createTempDirectory("zk-logs").toFile();
 
         // ZooKeeperServer overrides DefaultUncaughtExceptionHandler
         // and we do not want anyone to override this behaviour.
