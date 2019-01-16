@@ -11,10 +11,11 @@ import org.junit.Test;
 
 public class ZooKeeperRuleTest {
 
+    private static final String LOCAL_IP = "127.0.1.1";
     private static final int PORT = ZooKeeperRule.anOpenPort();
 
     @ClassRule
-    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(PORT);
+    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_IP + ":" + PORT);
 
     @Rule
     public ZooKeeperRule zkRule = new ZooKeeperRule();
