@@ -69,6 +69,7 @@ public class ZooKeeperRuleTest {
     public void testExplicitAddress() throws Exception {
         checkZkIsClean();
 
+        Assert.assertEquals(Integer.parseInt(LOCAL_ADDRESS.split(":")[1]), zkClassRule.getPort());
         Assert.assertEquals(LOCAL_ADDRESS, zkClassRule.getAddress());
 
         makeZkDirty();
