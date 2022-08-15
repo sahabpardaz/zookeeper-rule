@@ -3,7 +3,7 @@ JUnit rule which provides an embedded ZooKeeper server. The rule has also helper
  
  ## Sample Usage
  
- ```
+ ```java
  @Rule
  public ZooKeeperRule zkRule = new ZooKeeperRule();
  
@@ -15,7 +15,26 @@ JUnit rule which provides an embedded ZooKeeper server. The rule has also helper
      }
  }
  ```
- 
+## JUnit 5 Support
+
+Sample usage:
+
+```java
+@RegisterExtension
+static ZooKeeperExtension zooKeeperExtension = new ZooKeeperExtension();
+
+@Test
+public void test() throws Exception {
+    try (CuratorFramework client = zooKeeperExtension.newClient()) {  // It is also possible to create a client on a specific namespace
+        client.create().forPath("/path", "data".getBytes());
+        assertArrayEquals("data".getBytes(), client.getData().forPath("/path"));
+    }
+}
+```
+
  ## Add it to your project
  You can reference to this library by either of java build systems (Maven, Gradle, SBT or Leiningen) using snippets from this jitpack link:
  [![](https://jitpack.io/v/sahabpardaz/zookeeper-rule.svg)](https://jitpack.io/#sahabpardaz/zookeeper-rule)
+
+JUnit 4 and 5 dependencies are marked as optional, so you need to provide JUnit 4 or 5 dependency
+(based on what version you need, and you use) in you project to make it work.
