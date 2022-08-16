@@ -13,11 +13,12 @@ import static ir.sahab.zookeeperrule.ZooKeeperBase.anOpenPort;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ZooKeeperExtensionTest {
-    private static final String LOCAL_ADDRESS = "127.0.0.1:" + anOpenPort();
+    private static final int LOCAL_PORT = anOpenPort();
 
     @RegisterExtension
-    static ZooKeeperExtension zkClassWideExtension = new ZooKeeperExtension(LOCAL_ADDRESS);
+    static ZooKeeperExtension zkClassWideExtension = new ZooKeeperExtension(LOCAL_PORT);
 
     @RegisterExtension
     static ZooKeeperExtension zooKeeperExtension = new ZooKeeperExtension(TestInstance.Lifecycle.PER_METHOD);
@@ -72,8 +73,7 @@ class ZooKeeperExtensionTest {
     void testExplicitAddress() throws Exception {
         checkZkIsClean();
 
-        assertEquals(Integer.parseInt(LOCAL_ADDRESS.split(":")[1]), zkClassWideExtension.getPort());
-        assertEquals(LOCAL_ADDRESS, zkClassWideExtension.getAddress());
+        assertEquals(LOCAL_PORT, zkClassWideExtension.getPort());
 
         makeZkDirty();
     }

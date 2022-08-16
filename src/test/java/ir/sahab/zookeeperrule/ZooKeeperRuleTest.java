@@ -14,10 +14,10 @@ import static ir.sahab.zookeeperrule.ZooKeeperBase.anOpenPort;
 
 public class ZooKeeperRuleTest {
 
-    private static final String LOCAL_ADDRESS = "127.0.0.1:" + anOpenPort();
+    private static final int LOCAL_PORT = anOpenPort();
 
     @ClassRule
-    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_ADDRESS);
+    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_PORT);
 
     @Rule
     public ZooKeeperRule zkRule = new ZooKeeperRule();
@@ -72,8 +72,7 @@ public class ZooKeeperRuleTest {
     public void testExplicitAddress() throws Exception {
         checkZkIsClean();
 
-        Assert.assertEquals(Integer.parseInt(LOCAL_ADDRESS.split(":")[1]), zkClassRule.getPort());
-        Assert.assertEquals(LOCAL_ADDRESS, zkClassRule.getAddress());
+        Assert.assertEquals(LOCAL_PORT, zkClassRule.getPort());
 
         makeZkDirty();
     }

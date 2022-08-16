@@ -13,19 +13,18 @@ class ZooKeeperExtension extends ZooKeeperBase
 
     private final TestInstance.Lifecycle lifecycle;
 
-    public ZooKeeperExtension(String address, TestInstance.Lifecycle lifecycle) {
-        super(address);
+    public ZooKeeperExtension(int port, TestInstance.Lifecycle lifecycle) {
+        super(port);
         this.lifecycle = lifecycle;
     }
 
     /**
-     * Creates a extension to set up an embedded ZooKeeper.
+     * Creates an extension to set up an embedded Test ZooKeeper.
      *
-     * @param address the local address on which the embedded ZooKeeper should be setup. It should
-     *                be in format of "IP:PORT" and the IP should be one of the IPs of the local system.
+     * @param port a port on which the embedded ZooKeeper should be setup.
      */
-    public ZooKeeperExtension(String address) {
-        this(address, TestInstance.Lifecycle.PER_CLASS);
+    public ZooKeeperExtension(int port) {
+        this(port, TestInstance.Lifecycle.PER_CLASS);
     }
 
     public ZooKeeperExtension() {
@@ -38,28 +37,28 @@ class ZooKeeperExtension extends ZooKeeperBase
     }
 
     @Override
-    public void afterAll(ExtensionContext context) {
+    public void afterAll(ExtensionContext context) throws IOException {
         if (lifecycle == TestInstance.Lifecycle.PER_CLASS) {
             teardown();
         }
     }
 
     @Override
-    public void afterEach(ExtensionContext context) {
+    public void afterEach(ExtensionContext context) throws IOException {
         if (lifecycle == TestInstance.Lifecycle.PER_METHOD) {
             teardown();
         }
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) throws IOException, InterruptedException {
+    public void beforeAll(ExtensionContext context) throws Exception {
         if (lifecycle == TestInstance.Lifecycle.PER_CLASS) {
             setup();
         }
     }
 
     @Override
-    public void beforeEach(ExtensionContext context) throws IOException, InterruptedException {
+    public void beforeEach(ExtensionContext context) throws Exception {
         if (lifecycle == TestInstance.Lifecycle.PER_METHOD) {
             setup();
         }

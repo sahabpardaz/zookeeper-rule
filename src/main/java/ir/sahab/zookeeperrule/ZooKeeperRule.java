@@ -19,21 +19,24 @@ public class ZooKeeperRule extends ExternalResource {
     /**
      * Creates a rule to set up an embedded ZooKeeper.
      *
-     * @param address the local address on which the embedded ZooKeeper should be setup. It should
-     *                be in format of "IP:PORT" and the IP should be one of the IPs of the local system.
+     * @param port a port on which the embedded ZooKeeper should be setup.
      */
-    public ZooKeeperRule(String address) {
-        base = new ZooKeeperBase(address);
+    public ZooKeeperRule(int port) {
+        base = new ZooKeeperBase(port);
     }
 
     @Override
-    protected void before() throws IOException, InterruptedException {
+    protected void before() throws Exception {
         base.setup();
     }
 
     @Override
     protected void after() {
-        base.teardown();
+        try {
+            base.teardown();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
