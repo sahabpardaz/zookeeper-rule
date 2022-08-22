@@ -1,5 +1,6 @@
 # zookeeper-rule
-JUnit rule which provides an embedded ZooKeeper server. The rule has also helper methods to get curator clients which are initialized to work with that ZooKeeper.
+This library provides Junit 4 Rule and Junit 5 Extension which is an embedded ZooKeeper server. 
+The rule and extension has also helper methods to get curator clients which are initialized to work with that ZooKeeper.
  
  ## Sample Usage
  
