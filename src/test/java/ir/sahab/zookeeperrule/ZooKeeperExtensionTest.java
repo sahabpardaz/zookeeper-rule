@@ -36,6 +36,7 @@ class ZooKeeperExtensionTest {
         try (CuratorFramework client = zkClassWideExtension.newClient("test-ns")) {
             checkWriteAndRead(client, "/namespace-path");
         }
+
         // Check external client
         try (CuratorFramework client = CuratorFrameworkFactory
                 .newClient(zkClassWideExtension.getAddress(), 30000, 3000, new RetryNTimes(3, 100))) {
@@ -59,6 +60,7 @@ class ZooKeeperExtensionTest {
         try (CuratorFramework client = zooKeeperExtension.newClient("test-ns")) {
             checkWriteAndRead(client, "/namespace-path");
         }
+
         // Check external client
         try (CuratorFramework client = CuratorFrameworkFactory
                 .newClient(zooKeeperExtension.getAddress(), 30000, 3000, new RetryNTimes(3, 100))) {
@@ -87,8 +89,10 @@ class ZooKeeperExtensionTest {
     }
 
     private void checkZkIsClean() throws Exception {
-        CuratorFramework client = zooKeeperExtension.newClient();
-        List<String> children = client.getChildren().forPath("/");
+        List<String> children;
+        try (CuratorFramework client = zooKeeperExtension.newClient()) {
+            children = client.getChildren().forPath("/");
+        }
 
         // By default, a node named "zookeeper" exists under root.
         // So we expect here the size 1 instead of size 0.
@@ -96,10 +100,9 @@ class ZooKeeperExtensionTest {
         assertEquals("zookeeper", children.get(0));
     }
 
-    private void makeZkDirty()
-            throws Exception {
-        CuratorFramework client = zooKeeperExtension.newClient();
-        client.create().forPath("/dirtyPath", "dirtyData".getBytes());
-        client.close();
+    private void makeZkDirty() throws Exception {
+        try (CuratorFramework client = zooKeeperExtension.newClient()) {
+            client.create().forPath("/dirtyPath", "dirtyData".getBytes());
+        }
     }
 }

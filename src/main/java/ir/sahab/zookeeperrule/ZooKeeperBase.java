@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.nio.file.Files;
 
+/**
+ * Base class for initializing an embeddable Zookeeper server. It also provides helper method for creating clients.
+ */
 class ZooKeeperBase {
 
     private final int port;

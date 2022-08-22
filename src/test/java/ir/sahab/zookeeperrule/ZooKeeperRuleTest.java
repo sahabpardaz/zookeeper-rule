@@ -77,8 +77,7 @@ public class ZooKeeperRuleTest {
         makeZkDirty();
     }
 
-    private void checkWriteAndRead(CuratorFramework client, String path)
-            throws Exception {
+    private void checkWriteAndRead(CuratorFramework client, String path) throws Exception {
         byte[] zNodeDataBytes = "data".getBytes();
         client.create().forPath(path, zNodeDataBytes);
         byte[] resultBytes = client.getData().forPath(path);
@@ -86,8 +85,10 @@ public class ZooKeeperRuleTest {
     }
 
     private void checkZkIsClean() throws Exception {
-        CuratorFramework client = zkRule.newClient();
-        List<String> children = client.getChildren().forPath("/");
+        List<String> children;
+        try (CuratorFramework client = zkRule.newClient()) {
+            children = client.getChildren().forPath("/");
+        }
 
         // By default, a node named "zookeeper" exists under root.
         // So we expect here the size 1 instead of size 0.
@@ -95,10 +96,9 @@ public class ZooKeeperRuleTest {
         Assert.assertEquals("zookeeper", children.get(0));
     }
 
-    private void makeZkDirty()
-            throws Exception {
-        CuratorFramework client = zkRule.newClient();
-        client.create().forPath("/dirtyPath", "dirtyData".getBytes());
-        client.close();
+    private void makeZkDirty() throws Exception {
+        try (CuratorFramework client = zkRule.newClient()) {
+            client.create().forPath("/dirtyPath", "dirtyData".getBytes());
+        }
     }
 }
