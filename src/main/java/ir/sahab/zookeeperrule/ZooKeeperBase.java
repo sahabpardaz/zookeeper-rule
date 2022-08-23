@@ -13,16 +13,16 @@ import java.nio.file.Files;
 /**
  * Base class for initializing an embeddable Zookeeper server. It also provides helper method for creating clients.
  */
-class ZooKeeperBase {
+abstract class ZooKeeperBase {
 
     private final int port;
     private TestingServer testingServer;
 
-    public ZooKeeperBase(int port) {
+    protected ZooKeeperBase(int port) {
         this.port = port;
     }
 
-    public ZooKeeperBase() {
+    protected ZooKeeperBase() {
         this(anOpenPort());
     }
 

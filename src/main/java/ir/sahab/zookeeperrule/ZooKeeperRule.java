@@ -1,19 +1,20 @@
 package ir.sahab.zookeeperrule;
 
-import org.apache.curator.framework.CuratorFramework;
-import org.junit.rules.ExternalResource;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.MultipleFailureException;
+import org.junit.runners.model.Statement;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JUnit 4 rule which provides an embedded ZooKeeper server.
  */
-public class ZooKeeperRule extends ExternalResource {
-
-    private final ZooKeeperBase base;
+public class ZooKeeperRule extends ZooKeeperBase implements TestRule {
 
     public ZooKeeperRule() {
-        base = new ZooKeeperBase();
+        super();
     }
 
     /**
@@ -22,51 +23,35 @@ public class ZooKeeperRule extends ExternalResource {
      * @param port a port on which the embedded ZooKeeper should be setup.
      */
     public ZooKeeperRule(int port) {
-        base = new ZooKeeperBase(port);
+        super(port);
     }
 
-    @Override
-    protected void before() throws Exception {
-        base.setup();
+    //copied from org.junit.rules.ExternalResource
+    public Statement apply(Statement base, Description description) {
+        return statement(base);
     }
 
-    @Override
-    protected void after() {
-        try {
-            base.teardown();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private Statement statement(final Statement base) {
+        return new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                setup();
+
+                List<Throwable> errors = new ArrayList<Throwable>();
+                try {
+                    base.evaluate();
+                } catch (Throwable t) {
+                    errors.add(t);
+                } finally {
+                    try {
+                        teardown();
+                    } catch (Throwable t) {
+                        errors.add(t);
+                    }
+                }
+                MultipleFailureException.assertEmpty(errors);
+            }
+        };
     }
 
-    /**
-     * @return address of this ZK server
-     */
-    public String getAddress() {
-        return base.getAddress();
-    }
-
-    /**
-     * @return the port on local IP where this Embedded ZK is located.
-     */
-    public int getPort() {
-        return base.getPort();
-    }
-
-    /**
-     * Returns a new initialized client which has address of this embedded ZK as its remote. The
-     * caller is responsible to close the returned client.
-     */
-    public CuratorFramework newClient() {
-        return base.newClient();
-    }
-
-    /**
-     * Returns a new initialized client which has address of this embedded ZK as its remote and is
-     * working in the specified namespace. The caller is responsible to close the returned client.
-     * The caller is responsible to close it.
-     */
-    public CuratorFramework newClient(String namespace) {
-        return base.newClient(namespace);
-    }
 }
