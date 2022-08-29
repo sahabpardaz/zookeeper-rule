@@ -1,8 +1,20 @@
 # zookeeper-rule
-This library provides Junit 4 Rule and Junit 5 Extension which is an embedded ZooKeeper server. 
+
+[![Tests](https://github.com/sahabpardaz/zookeeper-rule/actions/workflows/maven-verify.yml/badge.svg?branch=master)](https://github.com/sahabpardaz/zookeeper-rule/actions/workflows/maven-verify.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=coverage)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=security_rating)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=sqale_index)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sahabpardaz_zookeeper-rule&metric=alert_status)](https://sonarcloud.io/dashboard?id=sahabpardaz_zookeeper-rule)
+[![JitPack](https://jitpack.io/v/sahabpardaz/zookeeper-rule.svg)](https://jitpack.io/#sahabpardaz/zookeeper-rule)
+
+This library provides Junit 4 Rule and Junit 5 Extension which is an embedded ZooKeeper server.
 The rule and extension has also helper methods to get curator clients which are initialized to work with that ZooKeeper.
- 
- ## Sample Usage
+
+## Sample Usage
  
  ```java
  @Rule
