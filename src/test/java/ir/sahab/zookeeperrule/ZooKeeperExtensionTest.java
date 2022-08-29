@@ -80,8 +80,7 @@ class ZooKeeperExtensionTest {
         makeZkDirty();
     }
 
-    private void checkWriteAndRead(CuratorFramework client, String path)
-            throws Exception {
+    private void checkWriteAndRead(CuratorFramework client, String path) throws Exception {
         byte[] zNodeDataBytes = "data".getBytes();
         client.create().forPath(path, zNodeDataBytes);
         byte[] resultBytes = client.getData().forPath(path);

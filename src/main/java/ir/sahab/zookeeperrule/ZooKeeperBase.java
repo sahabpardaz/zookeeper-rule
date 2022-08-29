@@ -34,6 +34,7 @@ abstract class ZooKeeperBase {
         }
     }
 
+    @SuppressWarnings("java:S5443")
     void setup() throws Exception {
 
         // ZooKeeperServer overrides DefaultUncaughtExceptionHandler,
