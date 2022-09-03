@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * JUnit 5 extension which provides an embedded ZooKeeper server.
  */
-class ZooKeeperExtension extends ZooKeeperBase
+public class ZooKeeperExtension extends ZooKeeperBase
         implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback {
 
     private final TestInstance.Lifecycle lifecycle;
