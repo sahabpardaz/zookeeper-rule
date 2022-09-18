@@ -3,9 +3,10 @@ package ir.sahab.zookeeperrule;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryNTimes;
-import org.apache.zookeeper.server.NIOServerCnxnFactory;
 import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.stream.Stream;
  */
 abstract class ZooKeeperBase {
 
+    private final Logger log = LoggerFactory.getLogger(ZooKeeperBase.class);
     private final int port;
     private final String localIp;
     private ServerCnxnFactory factory;
@@ -71,7 +73,7 @@ abstract class ZooKeeperBase {
     }
 
     @SuppressWarnings("java:S5443")
-    void setup() throws Exception {
+    void setup() throws IOException, InterruptedException {
 
         // ZooKeeperServer overrides DefaultUncaughtExceptionHandler,
         // and we do not want anyone to override this behaviour.
@@ -83,7 +85,7 @@ abstract class ZooKeeperBase {
         logDir = Files.createTempDirectory("zk-logs").toFile();
 
         final ZooKeeperServer zkServer = new ZooKeeperServer(snapshotDir, logDir, 500);
-        factory = NIOServerCnxnFactory.createFactory();
+        factory = ServerCnxnFactory.createFactory();
         factory.configure(new InetSocketAddress(localIp, port), 100);
         factory.startup(zkServer);
 
@@ -104,7 +106,7 @@ abstract class ZooKeeperBase {
                     .map(Path::toFile)
                     .forEach(File::delete);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("Exception cleaning Zookeepers temp directories", e);
         }
     }
 
