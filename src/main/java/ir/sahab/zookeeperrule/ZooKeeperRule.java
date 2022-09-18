@@ -20,10 +20,11 @@ public class ZooKeeperRule extends ZooKeeperBase implements TestRule {
     /**
      * Creates a rule to set up an embedded ZooKeeper.
      *
-     * @param port a port on which the embedded ZooKeeper should be setup.
+     * @param address the local address on which the embedded ZooKeeper should be setup. It should
+     *                be in format of "IP:PORT" and the IP should be one of the IPs of the local system.
      */
-    public ZooKeeperRule(int port) {
-        super(port);
+    public ZooKeeperRule(String address) {
+        super(address);
     }
 
     //copied from org.junit.rules.ExternalResource

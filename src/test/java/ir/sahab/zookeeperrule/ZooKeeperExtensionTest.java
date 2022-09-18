@@ -16,9 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ZooKeeperExtensionTest {
     private static final int LOCAL_PORT = anOpenPort();
+    private static final String LOCAL_ADDRESS = "127.0.0.1:" + LOCAL_PORT;
 
     @RegisterExtension
-    static ZooKeeperExtension zkClassWideExtension = new ZooKeeperExtension(LOCAL_PORT);
+    static ZooKeeperExtension zkClassWideExtension = new ZooKeeperExtension(LOCAL_ADDRESS);
 
     @RegisterExtension
     static ZooKeeperExtension zooKeeperExtension = new ZooKeeperExtension(TestInstance.Lifecycle.PER_METHOD);

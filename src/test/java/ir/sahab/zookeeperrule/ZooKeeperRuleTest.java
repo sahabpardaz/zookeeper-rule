@@ -15,9 +15,10 @@ import static ir.sahab.zookeeperrule.ZooKeeperBase.anOpenPort;
 public class ZooKeeperRuleTest {
 
     private static final int LOCAL_PORT = anOpenPort();
+    private static final String LOCAL_ADDRESS = "127.0.0.1:" + LOCAL_PORT;
 
     @ClassRule
-    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_PORT);
+    public static ZooKeeperRule zkClassRule = new ZooKeeperRule(LOCAL_ADDRESS);
 
     @Rule
     public ZooKeeperRule zkRule = new ZooKeeperRule();
