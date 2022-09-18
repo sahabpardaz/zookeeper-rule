@@ -3,8 +3,6 @@ package ir.sahab.zookeeperrule;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.*;
 
-import java.io.IOException;
-
 /**
  * JUnit 5 extension which provides an embedded ZooKeeper server.
  */
@@ -13,18 +11,19 @@ public class ZooKeeperExtension extends ZooKeeperBase
 
     private final TestInstance.Lifecycle lifecycle;
 
-    public ZooKeeperExtension(int port, TestInstance.Lifecycle lifecycle) {
-        super(port);
+    public ZooKeeperExtension(String address, TestInstance.Lifecycle lifecycle) {
+        super(address);
         this.lifecycle = lifecycle;
     }
 
     /**
      * Creates an extension to set up an embedded Test ZooKeeper.
      *
-     * @param port a port on which the embedded ZooKeeper should be setup.
+     * @param address the local address on which the embedded ZooKeeper should be setup. It should
+     *                be in format of "IP:PORT" and the IP should be one of the IPs of the local system.
      */
-    public ZooKeeperExtension(int port) {
-        this(port, TestInstance.Lifecycle.PER_CLASS);
+    public ZooKeeperExtension(String address) {
+        this(address, TestInstance.Lifecycle.PER_CLASS);
     }
 
     public ZooKeeperExtension() {
@@ -37,14 +36,14 @@ public class ZooKeeperExtension extends ZooKeeperBase
     }
 
     @Override
-    public void afterAll(ExtensionContext context) throws IOException {
+    public void afterAll(ExtensionContext context) {
         if (lifecycle == TestInstance.Lifecycle.PER_CLASS) {
             teardown();
         }
     }
 
     @Override
-    public void afterEach(ExtensionContext context) throws IOException {
+    public void afterEach(ExtensionContext context) {
         if (lifecycle == TestInstance.Lifecycle.PER_METHOD) {
             teardown();
         }
