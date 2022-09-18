@@ -16,7 +16,7 @@
 
     <groupId>ir.sahab</groupId>
     <artifactId>zookeeper-rule</artifactId>
-    <version>1.1.2-curator2_8</version>
+    <version>1.1.3</version>
 
     <dependencies>
         <dependency>
