@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static ir.sahab.zookeeperrule.ZooKeeperBase.anOpenPort;
+import static ir.sahab.zookeeperrule.ZooKeeperExtensionTest.anOpenPort;
 
 public class ZooKeeperRuleTest {
 
