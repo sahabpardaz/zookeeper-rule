@@ -7,9 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.List;
 
-import static ir.sahab.zookeeperrule.ZooKeeperBase.anOpenPort;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,6 +24,14 @@ class ZooKeeperExtensionTest {
 
     @RegisterExtension
     static ZooKeeperExtension zooKeeperExtension = new ZooKeeperExtension(TestInstance.Lifecycle.PER_METHOD);
+
+    static Integer anOpenPort() {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            return socket.getLocalPort();
+        } catch (IOException e) {
+            throw new AssertionError("Unable to find an open port.", e);
+        }
+    }
 
     @Test
     void testZKClassRule() throws Exception {

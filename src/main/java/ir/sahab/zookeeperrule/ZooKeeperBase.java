@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +27,7 @@ abstract class ZooKeeperBase {
     private final Logger log = LoggerFactory.getLogger(ZooKeeperBase.class);
     private final int port;
     private final String localIp;
+    private int localPort;
     private ServerCnxnFactory factory;
     private File snapshotDir;
     private File logDir;
@@ -46,14 +46,6 @@ abstract class ZooKeeperBase {
         this(newLocalAddress());
     }
 
-    static Integer anOpenPort() {
-        try (ServerSocket socket = new ServerSocket(0)) {
-            return socket.getLocalPort();
-        } catch (IOException e) {
-            throw new AssertionError("Unable to find an open port.", e);
-        }
-    }
-
     private static String newLocalAddress() {
 
         // Why we are going to use local IP and not just localhost or 127.0.0.1 constants?
@@ -69,7 +61,7 @@ abstract class ZooKeeperBase {
             throw new AssertionError(e);
         }
 
-        return localIp + ":" + anOpenPort();
+        return localIp + ":0";
     }
 
     @SuppressWarnings("java:S5443")
@@ -88,7 +80,7 @@ abstract class ZooKeeperBase {
         factory = ServerCnxnFactory.createFactory();
         factory.configure(new InetSocketAddress(localIp, port), 100);
         factory.startup(zkServer);
-
+        localPort = factory.getLocalPort();
         // Restore  the DefaultUncaughtExceptionHandler.
         Thread.setDefaultUncaughtExceptionHandler(handler);
     }
@@ -114,14 +106,14 @@ abstract class ZooKeeperBase {
      * @return address of this ZK server
      */
     public String getAddress() {
-        return localIp + ":" + port;
+        return localIp + ":" + localPort;
     }
 
     /**
      * @return the port on local IP where this Embedded ZK is located.
      */
     public int getPort() {
-        return port;
+        return localPort;
     }
 
     /**
